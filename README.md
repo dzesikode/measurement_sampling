@@ -1,6 +1,6 @@
 # Measurement Sampling
 
-Data sampling challenge
+Data sampling task
 
 ## Prerequisites
 
