@@ -10,7 +10,9 @@ def testGroupMeasurementByTypeEmptyList():
 
 
 def testGroupMeasurementsByTypeSingleMeasurement():
-    measurement = Measurement(measurementTime=datetime.now(), measurementType=MeasType.SPO2, value=98.0)
+    measurement = Measurement(
+        measurementTime=datetime.now(), measurementType=MeasType.SPO2, value=98.0
+    )
     grouped = groupMeasurementsByType([measurement])
     assert len(grouped) == 1
     assert grouped[MeasType.SPO2] == [measurement]
@@ -18,9 +20,15 @@ def testGroupMeasurementsByTypeSingleMeasurement():
 
 def testGroupMeasurementsByTypeMultipleTypes():
     measurements = [
-        Measurement(measurementTime=datetime.now(), measurementType=MeasType.SPO2, value=98.0),
-        Measurement(measurementTime=datetime.now(), measurementType=MeasType.HR, value=70.0),
-        Measurement(measurementTime=datetime.now(), measurementType=MeasType.TEMP, value=36.5)
+        Measurement(
+            measurementTime=datetime.now(), measurementType=MeasType.SPO2, value=98.0
+        ),
+        Measurement(
+            measurementTime=datetime.now(), measurementType=MeasType.HR, value=70.0
+        ),
+        Measurement(
+            measurementTime=datetime.now(), measurementType=MeasType.TEMP, value=36.5
+        ),
     ]
     grouped = groupMeasurementsByType(measurements)
     assert len(grouped) == 3
@@ -31,8 +39,12 @@ def testGroupMeasurementsByTypeMultipleTypes():
 
 def testGroupMeasurementsByTypeMultipleMeasurementsSameType():
     measurements = [
-        Measurement(measurementTime=datetime.now(), measurementType=MeasType.SPO2, value=98.0),
-        Measurement(measurementTime=datetime.now(), measurementType=MeasType.SPO2, value=97.0)
+        Measurement(
+            measurementTime=datetime.now(), measurementType=MeasType.SPO2, value=98.0
+        ),
+        Measurement(
+            measurementTime=datetime.now(), measurementType=MeasType.SPO2, value=97.0
+        ),
     ]
     grouped = groupMeasurementsByType(measurements)
     assert len(grouped) == 1

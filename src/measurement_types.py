@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 
+
 class MeasType(Enum):
     SPO2 = 1
     HR = 2
