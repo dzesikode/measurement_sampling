@@ -37,40 +37,6 @@ def isMeasurementInInterval(measurementTime: datetime, intervalStart: datetime, 
     return measurementTime > intervalStart and measurementTime <= intervalEnd
 
 
-def findMeasurementInterval(measurement: Measurement, intervals: OrderedDict, intervalStart: datetime, intervalEnd: datetime) -> None:
-    """
-    Find the proper interval for the given measurement. Increment the interval until one is found.
-
-    Args:
-        measurement (Measurement): The measurement to check.
-        intervals (OrderedDict): Dictionary of the intervals that already have measurements.
-        intervalStart (datetime): The lower bound of the interval.
-        intervalEnd (datetime): The upper bound of the interval.
-    """
-    while True:
-        if measurement.measurementTime < intervalStart:
-            break
-        elif isMeasurementInInterval(measurement.measurementTime, intervalStart, intervalEnd):
-            intervals[intervalEnd] = measurement
-            break
-        else:
-            intervalStart = intervalEnd
-            intervalEnd = intervalStart + timedelta(minutes=5)
-
-
-def addMeasurementIntervalsToResult(result: ResultType, measurementType: MeasType, intervals: OrderedDict) -> None:
-    """
-    Add the measurement type's measurements by interval to the result.
-
-    Args:
-        measurement (Measurement): The measurement to check.
-        intervals (OrderedDict): Dictionary of the intervals that already have measurements.
-        intervalStart (datetime): The lower bound of the interval.
-        intervalEnd (datetime): The upper bound of the interval.
-    """
-    result[measurementType].extend([{interval: measurement} for interval, measurement in intervals.items()])
-
-
 def sampleMeasurements(measurementStartTime: datetime, unsampledMeasurements: list[Measurement]) -> defaultdict[MeasType, list[dict[datetime, Measurement]]]:
     """
     Sample the given measurements with five-minute intervals
@@ -90,7 +56,16 @@ def sampleMeasurements(measurementStartTime: datetime, unsampledMeasurements: li
         intervalEnd = intervalStart + timedelta(minutes=5)
         intervals = OrderedDict()
         for measurement in sortedMeasurements:
-            findMeasurementInterval(measurement, intervals, intervalStart, intervalEnd)
-        addMeasurementIntervalsToResult(result, measurementType, intervals)
+            while True:
+                if measurement.measurementTime < intervalStart:
+                    break
+                elif isMeasurementInInterval(measurement.measurementTime, intervalStart, intervalEnd):
+                    intervals[intervalEnd] = measurement
+                    break
+                else:
+                    intervalStart = intervalEnd
+                    intervalEnd = intervalStart + timedelta(minutes=5)
+        if intervals:
+            result[measurementType].extend([{interval: measurement} for interval, measurement in intervals.items()])
 
     return result
